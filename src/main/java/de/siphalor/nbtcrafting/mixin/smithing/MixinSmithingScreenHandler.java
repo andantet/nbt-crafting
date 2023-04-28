@@ -27,6 +27,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmithingRecipe;
 import net.minecraft.screen.*;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -52,7 +53,8 @@ public abstract class MixinSmithingScreenHandler extends ForgingScreenHandler {
 			at = @At("HEAD")
 	)
 	protected void onTakeOutput(PlayerEntity player, ItemStack stack, CallbackInfo ci) {
-		Optional<SmithingRecipe> match = player.world.getRecipeManager().getFirstMatch(RecipeType.SMITHING, input, player.world);
+		World world = player.getWorld();
+		Optional<SmithingRecipe> match = world.getRecipeManager().getFirstMatch(RecipeType.SMITHING, input, world);
 		remainders = match.map(inventoryIngredientRecipe -> inventoryIngredientRecipe.getRemainder(input)).orElse(null);
 	}
 

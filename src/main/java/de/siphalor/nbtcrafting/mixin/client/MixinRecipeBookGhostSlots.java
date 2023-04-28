@@ -22,8 +22,8 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookGhostSlots;
-import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,10 +46,10 @@ public abstract class MixinRecipeBookGhostSlots {
 			at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;depthFunc(I)V", remap = false, shift = Shift.BEFORE),
 			locals = LocalCapture.CAPTURE_FAILSOFT
 	)
-	public void draw(MatrixStack matrices, MinecraftClient minecraftClient, int xOffset, int yOffset, boolean bool, float float_1, CallbackInfo ci, int i) {
+	public void draw(DrawContext context, MinecraftClient client, int x, int y, boolean notInventory, float tickDelta, CallbackInfo ci, int i) {
 		if (i != 0) {
 			RecipeBookGhostSlots.GhostInputSlot slot = slots.get(i);
-			minecraftClient.getItemRenderer().renderGuiItemOverlay(matrices, minecraftClient.textRenderer, slot.getCurrentItemStack(), slot.getX() + xOffset, slot.getY() + yOffset);
+			context.drawItemWithoutEntity(slot.getCurrentItemStack(), slot.getX() + x, slot.getY() + y);
 		}
 	}
 }

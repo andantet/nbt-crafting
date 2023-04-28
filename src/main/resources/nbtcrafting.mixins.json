@@ -29,7 +29,6 @@
 		"cutting.MixinStonecutterContainer",
 		"network.MixinPlayerManager",
 		"network.MixinSynchronizeRecipesS2CPacket",
-		"smithing.MixinLegacySmithingScreenHandler",
 		"smithing.MixinSmithingScreenHandler",
 		"smithing.MixinSmithingTransformRecipe"
 	],

@@ -22,6 +22,7 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -47,19 +48,19 @@ public abstract class MixinAnimatedResultButton extends ClickableWidget {
 
 	@Inject(
 			method = "renderButton",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderer;renderInGui(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemStack;II)V"),
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawItemWithoutEntity(Lnet/minecraft/item/ItemStack;II)V"),
 			locals = LocalCapture.CAPTURE_FAILSOFT
 	)
-	private void beforeItemDrawn(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, MinecraftClient minecraftClient, int i, int j, boolean bl, @SuppressWarnings("rawtypes") List list, ItemStack itemStack, int offset) {
+	private void beforeItemDrawn(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, MinecraftClient minecraftClient, int i, int j, boolean bl, @SuppressWarnings("rawtypes") List list, ItemStack itemStack, int offset) {
 		itemDrawOffset = offset;
 	}
 
 	@Inject(
 			method = "renderButton",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderer;renderInGui(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemStack;II)V", shift = Shift.AFTER),
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawItemWithoutEntity(Lnet/minecraft/item/ItemStack;II)V", shift = Shift.AFTER),
 			locals = LocalCapture.CAPTURE_FAILSOFT
 	)
-	private void drawButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, MinecraftClient minecraftClient, int i, int j, boolean bl, @SuppressWarnings("rawtypes") List list, ItemStack stack, int k) {
-		minecraftClient.getItemRenderer().renderGuiItemOverlay(matrices, minecraftClient.textRenderer, stack, this.getX() + itemDrawOffset, this.getY() + itemDrawOffset);
+	private void drawButton(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, MinecraftClient minecraftClient, int i, int j, boolean bl, @SuppressWarnings("rawtypes") List list, ItemStack stack, int k) {
+		context.drawItemWithoutEntity(stack, this.getX() + itemDrawOffset, this.getY() + itemDrawOffset);
 	}
 }

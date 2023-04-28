@@ -27,6 +27,7 @@ import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -68,9 +69,10 @@ public abstract class MixinAnvilContainer extends ForgingScreenHandler {
 
 	@Inject(method = "updateResult", at = @At("HEAD"), cancellable = true)
 	public void updateResult(CallbackInfo callbackInfo) {
-		recipe = player.world.getRecipeManager().getFirstMatch(NbtCrafting.ANVIL_RECIPE_TYPE, input, player.world).orElse(null);
+		World world = player.getWorld();
+		recipe = world.getRecipeManager().getFirstMatch(NbtCrafting.ANVIL_RECIPE_TYPE, input, world).orElse(null);
 		if (recipe != null) {
-			ItemStack resultStack = recipe.craft(input, player.world.getRegistryManager());
+			ItemStack resultStack = recipe.craft(input, world.getRegistryManager());
 			repairItemUsage = 1;
 			if (userChangedName) {
 				if (
@@ -136,7 +138,7 @@ public abstract class MixinAnvilContainer extends ForgingScreenHandler {
 			if (!recipe.getBase().isEmpty()) {
 				originalBaseStack.decrement(1);
 				getSlot(0).setStack(originalBaseStack);
-				stack.onCraft(player.world, player, stack.getCount());
+				stack.onCraft(player.getWorld(), player, stack.getCount());
 			}
 		}
 		if (player instanceof ServerPlayerEntity) {

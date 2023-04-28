@@ -51,11 +51,11 @@ import de.siphalor.nbtcrafting.util.duck.IItemStack;
 public abstract class MixinShapedRecipe {
 	@Shadow
 	@Final
-	private ItemStack output;
+	ItemStack output;
 
 	@Shadow
 	@Final
-	private DefaultedList<Ingredient> input;
+	DefaultedList<Ingredient> input;
 
 	@Inject(method = "outputFromJson", at = @At("HEAD"))
 	private static void handlePotions(JsonObject json, CallbackInfoReturnable<ItemStack> ci) {
